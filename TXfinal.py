@@ -18,7 +18,7 @@ pm25 = PM25_UART(uart, reset_pin)
 
 print("Found PM2.5 sensor, reading data...")
 
-start_time = time.time()  # Record the start time
+start_time = time.time() 
 while True:
     try:
         aqdata = pm25.read()
@@ -39,19 +39,20 @@ while True:
         "PM 1.0: %d\tPM2.5: %d\tPM10: %d"
         % (aqdata["pm10 env"], aqdata["pm25 env"], aqdata["pm100 env"])
     )
-    print("---------------------------------------")
-    print("Particles > 0.3um / 0.1L air:", aqdata["particles 03um"])
-    print("Particles > 0.5um / 0.1L air:", aqdata["particles 05um"])
-    print("Particles > 1.0um / 0.1L air:", aqdata["particles 10um"])
-    print("Particles > 2.5um / 0.1L air:", aqdata["particles 25um"])
-    print("Particles > 5.0um / 0.1L air:", aqdata["particles 50um"])
-    print("Particles > 10 um / 0.1L air:", aqdata["particles 100um"])
-    print("---------------------------------------")
+    #print("---------------------------------------")
+    #print("Particles > 0.3um / 0.1L air:", aqdata["particles 03um"])
+    #print("Particles > 0.5um / 0.1L air:", aqdata["particles 05um"])
+    #print("Particles > 1.0um / 0.1L air:", aqdata["particles 10um"])
+    #print("Particles > 2.5um / 0.1L air:", aqdata["particles 25um"])
+    #print("Particles > 5.0um / 0.1L air:", aqdata["particles 50um"])
+    #print("Particles > 10 um / 0.1L air:", aqdata["particles 100um"])
+    #print("---------------------------------------")
 
     elapsed_time = time.time() - start_time
-    if elapsed_time >= 30:
-        print("30 seconds elapsed. Exiting loop.")
+    print(elapsed_time)
+    if elapsed_time >= 5:
+        print("5 seconds elapsed. Exiting loop.")
         break
 
-    time.sleep(1)  # Wait for 1 second before next reading
+    time.sleep(1)  
 
