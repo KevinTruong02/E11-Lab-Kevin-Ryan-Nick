@@ -50,8 +50,8 @@ while True:
 
     elapsed_time = time.time() - start_time
     print(elapsed_time)
-    if elapsed_time >= 5:
-        print("5 seconds elapsed. Exiting loop.")
+    if elapsed_time >= 30:
+        print("30 seconds elapsed. Exiting loop.")
         break
 
     time.sleep(1)  
