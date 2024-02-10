@@ -37,7 +37,7 @@ while True:
         print("Unable to read from sensor, retrying...")
         continue
     datalist= [time.time(), aqdata["pm10 standard"], aqdata["pm25 standard"], aqdata["pm100 standard"]]
-    writer.writerrow(datalist)
+    writer.writerow(datalist)
     print()
     print("Concentration Units (standard)")
     print("---------------------------------------")
