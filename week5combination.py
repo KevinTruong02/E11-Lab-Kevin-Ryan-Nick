@@ -50,17 +50,17 @@ writer.writerow(weather_headers + aq_headers)
 start_time = time.time()
 while (time.time() - start_time) < run_time:
     try:
-        # Read data from weather sensor
+        
         weather_data = [time.time(), bme680.temperature, bme680.gas, bme680.relative_humidity, bme680.pressure, bme680.altitude]
 
-        # Read data from air quality sensor
+        
         aq_data = pm25.read()
         aq_data_list = [aq_data["pm10 standard"], aq_data["pm25 standard"], aq_data["pm100 standard"]]
 
-        # Write combined data to CSV
+   
         writer.writerow(weather_data + aq_data_list)
 
-        # Print data (optional)
+       
         print("Weather Data:", weather_data)
         print("Air Quality Data:", aq_data_list)
 
@@ -70,5 +70,5 @@ while (time.time() - start_time) < run_time:
 
     time.sleep(1)
 
-# Close the CSV file
+
 file.close()
