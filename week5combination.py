@@ -16,7 +16,7 @@ import serial
 import adafruit_bme680
 from adafruit_pm25.uart import PM25_UART
 
-# Function to parse command-line arguments
+
 def parse_arguments():
     run_time = 30  # Default run time is 30 seconds
     filename = "sensor_data.csv"  # Default filename
@@ -29,7 +29,7 @@ def parse_arguments():
 
     return run_time, filename
 
-# Create sensor objects
+
 i2c = board.I2C()
 bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c)
 bme680.sea_level_pressure = 1013.25
@@ -37,12 +37,12 @@ bme680.sea_level_pressure = 1013.25
 uart = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=0.25)
 pm25 = PM25_UART(uart, reset_pin=None)
 
-# Initialize CSV file and writer
+
 run_time, filename = parse_arguments()
 file = open(filename, "w", newline='')
 writer = csv.writer(file)
 
-# Write headers
+
 weather_headers = ["Time", "Temperature (C)", "Gas (ohm)", "Humidity (%)", "Pressure (hPa)", "Altitude (m)"]
 aq_headers = ["Time", "PM1 (std)", "PM2.5 (std)", "PM10 (std)"]
 writer.writerow(weather_headers + aq_headers)
