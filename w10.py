@@ -3,53 +3,50 @@ import time
 from datetime import datetime
 import argparse
 
-
+# Setup command line arguments
 parser = argparse.ArgumentParser(description='Radiation event logger')
-parser.add_argument('--runtime', type=int, default=120, help='Duration to run the script in seconds. Default is 120 seconds.')
-parser.add_argument('--interval', type=int, default=10, help='Interval for recording counts in seconds is now used for detailed event logging, not just summary counts.')
+parser.add_argument('--runtime', type=int, default=120, help='Duration to run the script in seconds.')
+parser.add_argument('--interval', type=int, default=10, help='Interval for recording counts in seconds.')
 parser.add_argument('--output', type=str, default='radiation_counts.txt', help='Filename for saving the output.')
 args = parser.parse_args()
 
-
-sensor_pin = 17 
+# GPIO setup
+sensor_pin = 17
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(sensor_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(sensor_pin, GPIO.IN)  # Removed pull_up_down for demonstration
 
-
+# Variables for event counting
 count = 0
-events = []
 
-
+# Callback function to execute on GPIO edge detection
 def event_detected(channel):
-    global count, events
+    global count
     count += 1
-    event_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    events.append(f"{event_time}, Event\n")
-    print(f"Event detected at: {event_time}")
+    print(f"Event detected at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
+# Setup event detection with both edges and reduced bouncetime
+GPIO.add_event_detect(sensor_pin, GPIO.BOTH, callback=event_detected, bouncetime=50)
 
-GPIO.add_event_detect(sensor_pin, GPIO.FALLING, callback=event_detected, bouncetime=10)  # Further reduced bouncetime for sensitivity
-
-
-def log_events():
-    with open(args.output, 'a') as file:
-        for event in events:
-            file.write(event)
-
-
+# Function to handle the main loop and data logging
 def main_loop():
-    initial_time = time.time()
-    try:
-        while True:
-            current_time = time.time()
-            if args.runtime > 0 and (current_time - initial_time) > args.runtime:
-                break
-    finally:
-        log_events()  # Log events at the end or on interrupt
+    global count
+    start_time = time.time()
+    initial_time = start_time
+    while True:
+        current_time = time.time()
+        if args.runtime > 0 and (current_time - initial_time) > args.runtime:
+            break
+        if current_time - start_time >= args.interval:
+            print(f"Counts in the last {args.interval} seconds: {count}")
+            with open(args.output, 'a') as file:
+                file.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}, Counts: {count}\n")
+            count = 0
+            start_time = current_time
 
 try:
     main_loop()
 except KeyboardInterrupt:
     print("Program terminated by user.")
 finally:
-    GPIO.cleanup() 
+    GPIO.cleanup()
+
